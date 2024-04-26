@@ -17,7 +17,7 @@ st.markdown("""
 """)
 
 
-holmes_version = st.selectbox("Select Holmes Version", options=["Holmes 🔎 - Our comprehensive version", "FlashHolmes ⚡ - Our streamlined version, built with efficiency in mind"])
+holmes_version = st.selectbox("Select Holmes Version", options=["Holmes 🔎 - Our comprehensive version", "FlashHolmes ⚡ - Our streamlined version, built with efficiency in mind and relying on freely available data"])
 free_holmes = st.checkbox("Only Freely-Available Datasets")
 
 sort_by = st.selectbox(
@@ -80,6 +80,13 @@ parameters = {
     'lmsys/vicuna-13b-v1.5': 13000000000,
     'mistralai/Mixtral-8x7B-Instruct-v0.1': 56000000000,
     'mistralai/Mixtral-8x7B-v0.1': 56000000000,
+    'mistralai/Mistral-7B-Instruct-v0.1': 7000000000,
+    'mistralai/Mistral-7B-v0.1': 7000000000,
+    'WizardLM/WizardLM-13B-V1.2': 13000000000,
+    'ibm/merlinite-7b': 7000000000,
+    'ibm/labradorite-13b': 13000000000,
+    'google/gemma-7b': 7000000000,
+    'google/gemma-7b-it': 7000000000,
 }
 
 
@@ -138,6 +145,13 @@ architecture = {
     'lmsys/vicuna-13b-v1.5': "Dec",
     'mistralai/Mixtral-8x7B-Instruct-v0.1': "Dec",
     'mistralai/Mixtral-8x7B-v0.1': "Dec",
+    'mistralai/Mistral-7B-Instruct-v0.1': "Dec",
+    'mistralai/Mistral-7B-v0.1': "Dec",
+    'WizardLM/WizardLM-13B-V1.2': "Dec",
+    'ibm/merlinite-7b': "Dec",
+    'ibm/labradorite-13b': "Dec",
+    'google/gemma-7b': "Dec",
+    'google/gemma-7b-it': "Dec",
 }
 
 
@@ -146,10 +160,10 @@ if free_holmes:
 
 if "data" not in st.session_state:
     st.session_state["raw_data"] = {
-        "Holmes 🔎 - Our comprehensive version": read_data("data/holmes_results_f1_raw_v4.0.csv"),
-        "FlashHolmes ⚡ - Our streamlined version, built with efficiency in mind": read_data("data/holmes_results_f1_raw_v4.0.csv", train_portions=[0.0625]),
-        "FreeHolmes": read_data("data/holmes_results_f1_raw_free_v4.0.csv"),
-        "FreeFlashHolmes": read_data("data/holmes_results_f1_raw_free_v4.0.csv", train_portions=[0.0625]),
+        "Holmes 🔎 - Our comprehensive version": read_data("data/holmes_results_f1_raw.csv"),
+        "FlashHolmes ⚡ - Our streamlined version, built with efficiency in mind": read_data("data/holmes_results_f1_raw.csv", train_portions=[0.0625]),
+        "FreeHolmes": read_data("data/holmes_results_f1_raw_free.csv"),
+        "FreeFlashHolmes": read_data("data/holmes_results_f1_raw_free.csv", train_portions=[0.0625]),
         #"f1_std": read_data("data/holmes_results_f1-std.csv"),
         #"compression": read_data("data/holmes_results_compression.csv"),
     }

@@ -18,13 +18,13 @@ st.set_page_config(
 #st.title("Holmes Explorer")
 st.image("images/holmes_explorer.svg", width=400)
 st.markdown("""
-    This page allows you do analyze results of Holmes 🔎 regarding language models and datasets. 
+    This page allows you to analyze the linguistic competence of language models evaluate with Holmes 🔎. 
     
     ### Overall Results
     
     This part shows you how the different language models perform. 
-    You can analyze the `mean winning rate` of the selected language models for `linguistic competencies`, `linguistic phenomena`, or `probing datasets`.
-    Note, these plots are not connected to each other. You can select syntax phenomena while inspecting all `competencies` on the same time. 
+    You can analyze the `mean winning rate` of the selected language models for `phenomena types`, specific `linguistic phenomena`, or `datasets`.
+    Note, these plots are not connected to each other. You can select the part-of-speech phenomenon while inspecting all discourse `phenomena` on the same time. 
 
 """)
 
@@ -52,7 +52,7 @@ def update_rankings(rankings, selected_models, add_average=True, sort_by="probin
 
 if "data" not in st.session_state:
     st.session_state["raw_data"] = {
-        "f1": read_data("data/holmes_results_f1_raw_v4.0.csv"),
+        "f1": read_data("data/holmes_results_f1_raw.csv"),
         #"f1_std": read_data("data/holmes_results_f1-std.csv"),
         #"compression": read_data("data/holmes_results_compression.csv"),
     }
@@ -82,11 +82,11 @@ st.multiselect(
 
 selected_models = st.session_state["selected_models"]
 
-tab1, tab2, tab3 = st.tabs(["Linguistic Competencies", "Linguistic Phenomena", "Probing Datasets"])
+tab1, tab2, tab3 = st.tabs(["Phenomena Type", "Linguistic Phenomena", "Probing Datasets"])
 
 with tab1:
     st.multiselect(
-        label="Select linguistic competencies to analyze",
+        label="Select phenomena types to analyze",
         options=st.session_state["linguistic_competencies"],
         key="selected_competencies",
         default=st.session_state["linguistic_competencies"]
@@ -95,12 +95,12 @@ with tab1:
     relevant_competencies_data = st.session_state["aggregated_by_competencies"][st.session_state["aggregated_by_competencies"]["model"].isin(selected_models)]
     relevant_competencies_data = relevant_competencies_data[relevant_competencies_data['linguistic competencies'].isin(st.session_state["selected_competencies"])]
 
-    fig = get_polar_plot(data=relevant_competencies_data, target_column='linguistic competencies', title="Competencies Comparison")
+    fig = get_polar_plot(data=relevant_competencies_data, target_column='linguistic competencies', title="Phenomena Type Comparison")
     st.plotly_chart(fig)
 
 with tab2:
     st.multiselect(
-        label="Select linguistic phenomena to analyze",
+        label="Select specific linguistic phenomena to analyze",
         options=st.session_state["linguistic_phenomena"],
         key="selected_phenomena",
         default=["negation", "part-of-speech", "binding"]
@@ -190,11 +190,11 @@ def style_rankings(rankings, selected_models):
 st.markdown("""
     ### Competencies Details
     
-    The second part shows Holmes 🔎 results of `competencies` separately. 
-    This includes the `winning rate` for a specific model and the `probing datasets` under test. 
-    In addition, `deviation` tells how much the selected language models deviate among each other for a specfic `probing dataset`. 
-    With `discriminability`, we report the agreement of a given `probing dataset` with the average rankings of the specific `linguistic competence`. 
-    For example, `discriminability=1` means that the model rankings of the specific `probing dataset` agrees 100% with average rankings of the specific `linguistic competence`. 
+    The second part shows Holmes 🔎 results of `phenomena` types separately. 
+    This includes the `winning rate` for a specific model and the `datasets` under test. 
+    In addition, `deviation` tells how much the selected language models deviate among each other for a specific `dataset`. 
+    With `discriminability`, we report the agreement of a given `dataset` with the average rankings of the specific `phenomena type`. 
+    For example, `discriminability=1` means that the model rankings of the specific `dataset` agrees 100% with average rankings of the specific `phenomena type`. 
     
     Bellow you can choose how to sort the tables and/or filter out rows not containing specific strings. 
 """)
