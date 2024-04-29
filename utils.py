@@ -21,15 +21,19 @@ def read_data(path, train_portions=[1]):
     del frame["linguistic subfield"]
 
     frame = frame.groupby(["probing dataset", "linguistic phenomena", "probe type", "probe", "linguistic competencies"]).mean().reset_index()
-    del frame["seed"]
-    del frame["train portion"]
+    if "seed" in frame.columns:
+        del frame["seed"]
+
+    if "train portion" in frame.columns:
+        del frame["train portion"]
 
     return frame
 
 
 def get_rankings(data, model_columns):
     rankings = data[model_columns].rank(axis=1, method="max", ascending=True)
-    normalized_rankings = rankings.apply(lambda row: (row-row.min()) / (row.max() - row.min()),axis=1)
+
+    normalized_rankings = (rankings-rankings.min())/(rankings.max()-rankings.min())
     ranking_data = data.copy()
     ranking_data[model_columns] = normalized_rankings
 

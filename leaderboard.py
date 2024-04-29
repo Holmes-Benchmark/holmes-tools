@@ -13,10 +13,14 @@ st.set_page_config(
 st.image("images/holmes_leaderboard.svg", width=400)
 st.markdown("""
     This is the leaderboard of the Holmes 🔎 benchmark. 
+    
 """)
 
 
-holmes_version = st.selectbox("Select Holmes Version", options=["Holmes 🔎 - Our comprehensive version", "FlashHolmes ⚡ - Our streamlined version, built with efficiency in mind and relying on freely available data"])
+holmes_version = st.selectbox("Select Holmes Version", options=[
+    "Holmes 🔎 - Our comprehensive version",
+    "FlashHolmes ⚡ - Our streamlined version, built with efficiency in mind and relying on freely available data"
+])
 #free_holmes = st.checkbox("Only Freely-Available Datasets")
 
 sort_by = st.selectbox(
@@ -66,6 +70,8 @@ parameters = {
     'meta-llama/Llama-2-13b-hf': 13000000000,
     'meta-llama/Llama-2-70b-chat-hf': 70000000000,
     'meta-llama/Llama-2-70b-hf': 70000000000,
+    'allenai/tulu-2-dpo-70b': 70000000000,
+    'allenai/tulu-2-70b': 70000000000,
     'meta-llama/Llama-2-7b-chat-hf': 7000000000,
     'meta-llama/Llama-2-7b-hf': 7000000000,
     'microsoft/deberta-base': 100000000,
@@ -151,6 +157,8 @@ architecture = {
     'ibm/labradorite-13b': "Dec",
     'google/gemma-7b': "Dec",
     'google/gemma-7b-it': "Dec",
+    'allenai/tulu-2-dpo-70b': "Dec",
+    'allenai/tulu-2-70b': "Dec"
 }
 
 
@@ -159,8 +167,8 @@ architecture = {
 
 if "data" not in st.session_state:
     st.session_state["raw_data"] = {
-        "Holmes 🔎 - Our comprehensive version": read_data("data/holmes_results_f1_raw_gum.csv"),
-        "FlashHolmes ⚡ - Our streamlined version, built with efficiency in mind": read_data("data/holmes_results_f1_raw_gum.csv", train_portions=[0.03125]),
+        "Holmes 🔎 - Our comprehensive version": read_data("data/holmes_results_f1.csv"),
+        "FlashHolmes ⚡ - Our streamlined version, built with efficiency in mind and relying on freely available data": read_data("data/holmes_results_f1_raw_free.csv", train_portions=[0.03125]),
         #"FreeHolmes": read_data("data/holmes_results_f1_raw_free.csv"),
         #"FreeFlashHolmes": read_data("data/holmes_results_f1_raw_free.csv", train_portions=[0.0625]),
         #"f1_std": read_data("data/holmes_results_f1-std.csv"),
@@ -209,12 +217,50 @@ def style_leaderboard(leaderboard):
     return styled_leaderboard
 
 
+def convert_params(params):
+    string_params = []
+
+    for param in params:
+        if param >= 1000000000:
+            string_params.append(
+                f"{str(int(param/1000000000))}B"            )
+        elif param > 1000000:
+            string_params.append(
+                f"{str(int(param/1000000))}m"
+            )
+        else:
+            string_params.append(
+                str(param)
+            )
+
+    return string_params
+
+def convert_model(models):
+    new_models = []
+
+    for model in models:
+        if "glove" in model and "840B" in model:
+            new_models.append("Glove.840B")
+        elif "glove" in model and "6B" in model:
+            new_models.append("Glove.6B")
+        else:
+            new_models.append(model)
+
+    return new_models
+
 with st.expander("Leaderboard", expanded=True):
-    leaderboard = leaderboard.sort_values(sort_by, ascending=False)
+    leaderboard = leaderboard.sort_values(sort_by, ascending=False).reset_index(drop=True)
+
+    leaderboard.index += 1
 
     leaderboard.columns = ['Model', 'Architecture', 'Params', "Overall", "Discourse", "Morphology", "Reasoning", "Semantics", "Syntax"]
 
     styled_leaderboard = style_leaderboard(leaderboard)
+
+    styled_leaderboard.data.Params = convert_params(styled_leaderboard.data.Params)
+    styled_leaderboard.data.Model = convert_model(styled_leaderboard.data.Model)
+
+
 
     st.write(styled_leaderboard.to_html(), unsafe_allow_html=True)
 
