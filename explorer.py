@@ -52,7 +52,7 @@ def update_rankings(rankings, selected_models, add_average=True, sort_by="probin
 
 if "data" not in st.session_state:
     st.session_state["raw_data"] = {
-        "f1": read_data("data/holmes_results_f1_raw_gum.csv"),
+        "f1": read_data("data/holmes_results_f1.csv"),
         #"f1_std": read_data("data/holmes_results_f1-std.csv"),
         #"compression": read_data("data/holmes_results_compression.csv"),
     }
