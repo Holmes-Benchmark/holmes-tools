@@ -13,12 +13,11 @@ st.set_page_config(
 st.image("images/holmes_leaderboard.svg", width=400)
 st.markdown("""
     This is the leaderboard of the Holmes 🔎 benchmark. 
-    You can choose to consider only non licensed datasets or all of them, and how you wish to sort the table.
 """)
 
 
 holmes_version = st.selectbox("Select Holmes Version", options=["Holmes 🔎 - Our comprehensive version", "FlashHolmes ⚡ - Our streamlined version, built with efficiency in mind and relying on freely available data"])
-free_holmes = st.checkbox("Only Freely-Available Datasets")
+#free_holmes = st.checkbox("Only Freely-Available Datasets")
 
 sort_by = st.selectbox(
     "Select Columns to Sort",
@@ -155,15 +154,15 @@ architecture = {
 }
 
 
-if free_holmes:
-    holmes_version = f"Free{holmes_version}"
+#if free_holmes:
+ #   holmes_version = f"Free{holmes_version}"
 
 if "data" not in st.session_state:
     st.session_state["raw_data"] = {
-        "Holmes 🔎 - Our comprehensive version": read_data("data/holmes_results_f1_raw.csv"),
-        "FlashHolmes ⚡ - Our streamlined version, built with efficiency in mind": read_data("data/holmes_results_f1_raw.csv", train_portions=[0.0625]),
-        "FreeHolmes": read_data("data/holmes_results_f1_raw_free.csv"),
-        "FreeFlashHolmes": read_data("data/holmes_results_f1_raw_free.csv", train_portions=[0.0625]),
+        "Holmes 🔎 - Our comprehensive version": read_data("data/holmes_results_f1_raw_gum.csv"),
+        "FlashHolmes ⚡ - Our streamlined version, built with efficiency in mind": read_data("data/holmes_results_f1_raw_gum.csv", train_portions=[0.03125]),
+        #"FreeHolmes": read_data("data/holmes_results_f1_raw_free.csv"),
+        #"FreeFlashHolmes": read_data("data/holmes_results_f1_raw_free.csv", train_portions=[0.0625]),
         #"f1_std": read_data("data/holmes_results_f1-std.csv"),
         #"compression": read_data("data/holmes_results_compression.csv"),
     }
