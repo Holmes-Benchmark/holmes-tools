@@ -44,7 +44,7 @@ To run the interactive user interface ensure your setup meets the following requ
 ## 🔎 Custom Data
 If you evaluate a custom model and produced a custom result file, put it into the data folder. 
 
-## 🔎 Run Tools
+## 🔎 Run Explorer and Leaderboard
 
 <img style="vertical-align:middle" src="https://holmes-benchmark.github.io/assets/img/explorer.png" />
 
