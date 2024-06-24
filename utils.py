@@ -18,7 +18,9 @@ def process_frame(frame, train_portions=[1]):
     if "Unnamed: 0" in frame.columns:
         del frame["Unnamed: 0"]
 
-    frame = frame[frame["train portion"].isin(train_portions)]
+    if "train portion" in frame.columns:
+        frame = frame[frame["train portion"].isin(train_portions)]
+
     frame["linguistic competencies"] = frame["linguistic subfield"]
     del frame["linguistic subfield"]
 
@@ -32,7 +34,7 @@ def process_frame(frame, train_portions=[1]):
     return frame
 def read_data(path, train_portions=[1]):
     frame = pandas.read_csv(path)
-    return process_frame(frame)
+    return process_frame(frame, train_portions)
 
 
 def get_rankings(data, model_columns):
