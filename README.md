@@ -47,8 +47,15 @@ If you evaluate a custom model and produced a custom result file, put it into th
 ## 🔎 Run Tools
 
 <img style="vertical-align:middle" src="https://holmes-benchmark.github.io/assets/img/explorer.png" />
-<img style="vertical-align:middle" src="https://holmes-benchmark.github.io/assets/img/leaderboard.png" />
 
+The explorer script (`explorer.py`) provides the following argument:
+* `--result_file` (optional) a custom result file, for example `data/custom_results.csv`. Note, this can be a Holmes 🔎 or FlashHolmes ⚡ results file.
+
+* <img style="vertical-align:middle" src="https://holmes-benchmark.github.io/assets/img/leaderboard.png" />
+
+The leaderboard script (`explorer.py`) provides the following argument:
+* `--holmes_result_file` (optional) a custom result file of the full benchmark , for example `data/custom_holmes_results.csv`.
+* `--flash_holmes_result_file` (optional) a custom result file of the efficient benchmark , for example `data/custom_holmes_results.csv`.
 
 # 🔎Disclaimer
 We provide datasets in a specific format without endorsing their quality, fairness, or confirming your licensing rights. 
