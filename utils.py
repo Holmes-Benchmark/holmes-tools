@@ -14,8 +14,10 @@ def aggregate_results(data, target_property):
 
     return aggregation
 
-def read_data(path, train_portions=[1]):
-    frame = pandas.read_csv(path, index_col=0)
+def process_frame(frame, train_portions=[1]):
+    if "Unnamed: 0" in frame.columns:
+        del frame["Unnamed: 0"]
+
     frame = frame[frame["train portion"].isin(train_portions)]
     frame["linguistic competencies"] = frame["linguistic subfield"]
     del frame["linguistic subfield"]
@@ -28,6 +30,9 @@ def read_data(path, train_portions=[1]):
         del frame["train portion"]
 
     return frame
+def read_data(path, train_portions=[1]):
+    frame = pandas.read_csv(path)
+    return process_frame(frame)
 
 
 def get_rankings(data, model_columns):
