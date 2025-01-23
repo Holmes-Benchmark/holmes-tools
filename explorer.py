@@ -10,10 +10,7 @@ from scipy.stats import kendalltau
 from st_keyup import st_keyup
 
 from utils import read_data, get_rankings, aggregate_results, get_polar_plot, process_frame
-@click.command()
-@click.option('--result_file', type=str, default="data/holmes_results_f1.csv")
-def main(result_file):
-
+def main():
     im = Image.open("images/holmes_icon.png")
 
     st.set_page_config(
@@ -24,7 +21,24 @@ def main(result_file):
     st.image("images/holmes_explorer.svg", width=400)
     st.markdown("""
         This page allows you to analyze the linguistic competence of language models evaluate with Holmes 🔎. 
-        
+    """)
+
+
+    benchmark_name = st.radio(
+        "First Select the Benchmark Version to Explore",
+        key="visibility",
+        options=["Holmes 🔎", "FlashHolmes ⚡"],
+        index=0
+    )
+
+    if benchmark_name == "Holmes 🔎":
+        portion = 1
+        result_file = "data/holmes_results_f1.csv"
+    else:
+        portion = 0.03125
+        result_file = "data/holmes_results_f1_raw_free.csv"
+
+    st.markdown("""
         ### Overall Results
         
         This part shows you how the different language models perform. 
@@ -32,8 +46,8 @@ def main(result_file):
         Note, these plots are not connected to each other. You can select the part-of-speech phenomenon while inspecting all discourse `phenomena` on the same time. 
         
         __Custom Data__: If you have result from evaluating a custom language model, you can upload the resulting leaderboard file. After load this data, you can analyze it with the userinterface or download the transformed data bellow.
-        """)
 
+    """)
 
     @st.cache_data
     def convert_frame(frame):
@@ -64,7 +78,7 @@ def main(result_file):
 
     if "data" not in st.session_state and uploaded_file is None:
         st.session_state["raw_data"] = {
-            "f1": read_data(result_file),
+            "f1": read_data(result_file, train_portions=portion),
             #"f1_std": read_data("data/holmes_results_f1-std.csv"),
             #"compression": read_data("data/holmes_results_compression.csv"),
         }
@@ -237,10 +251,10 @@ def main(result_file):
 
         return styled_rankings
 
-    st.markdown("""
+    st.markdown(f"""
         ### Competencies Details
         
-        The second part shows Holmes 🔎 results of `phenomena` types separately. 
+        The second part shows {benchmark_name} results of `phenomena` types separately. 
         This includes the `winning rate` for a specific model and the `datasets` under test. 
         In addition, `deviation` tells how much the selected language models deviate among each other for a specific `dataset`. 
         With `discriminability`, we report the agreement of a given `dataset` with the average rankings of the specific `phenomena type`. 
