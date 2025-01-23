@@ -9,8 +9,9 @@ def process_frame(frame, train_portions=[1]):
     if "train portion" in frame.columns:
         frame = frame[frame["train portion"].isin(train_portions)]
 
-    frame["linguistic competencies"] = frame["linguistic subfield"]
-    del frame["linguistic subfield"]
+    if "linguistic subfield" in frame.columns:
+        frame["linguistic competencies"] = frame["linguistic subfield"]
+        del frame["linguistic subfield"]
 
     frame = frame.groupby(["probing dataset", "linguistic phenomena", "probe type", "probe", "linguistic competencies"]).mean().reset_index()
     if "seed" in frame.columns:
@@ -38,5 +39,5 @@ for result_file in result_files:
 
     flash_holmes_results = flash_holmes_results.set_index("probing dataset").join(pivot_results.set_index("probing_dataset")).reset_index()
 
-flash_holmes_results.to_csv("combined_results.csv")
+flash_holmes_results.fillna(0.0).to_csv("combined_results.csv")
 print()

@@ -21,8 +21,9 @@ def process_frame(frame, train_portions=[1]):
     if "train portion" in frame.columns:
         frame = frame[frame["train portion"].isin(train_portions)]
 
-    frame["linguistic competencies"] = frame["linguistic subfield"]
-    del frame["linguistic subfield"]
+    if "linguistic subfield" in frame.columns:
+        frame["linguistic competencies"] = frame["linguistic subfield"]
+        del frame["linguistic subfield"]
 
     frame = frame.groupby(["probing dataset", "linguistic phenomena", "probe type", "probe", "linguistic competencies"]).mean().reset_index()
     if "seed" in frame.columns:

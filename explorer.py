@@ -78,7 +78,7 @@ def main():
 
     if "data" not in st.session_state and uploaded_file is None:
         st.session_state["raw_data"] = {
-            "f1": read_data(result_file, train_portions=portion),
+            "f1": read_data(result_file, train_portions=[portion]),
             #"f1_std": read_data("data/holmes_results_f1-std.csv"),
             #"compression": read_data("data/holmes_results_compression.csv"),
         }
@@ -100,7 +100,7 @@ def main():
         st.session_state["probing_datasets"] = list(st.session_state["raw_data"]["f1"]["probing dataset"].unique())
         st.session_state["linguistic_competencies"] = list(st.session_state["raw_data"]["f1"]["linguistic competencies"].unique())
         st.session_state["linguistic_phenomena"] = list(st.session_state["raw_data"]["f1"]["linguistic phenomena"].unique())
-        st.session_state["models"] = st.session_state["raw_data"]["f1"].columns[6:-1]
+        st.session_state["models"] = st.session_state["raw_data"]["f1"].columns[6:]
 
         st.session_state["rankings_f1"] = get_rankings(st.session_state["raw_data"]["f1"], st.session_state["models"])
         #st.session_state["rankings_f1_std"] = get_rankings(st.session_state["raw_data"]["f1_std"], st.session_state["models"])
