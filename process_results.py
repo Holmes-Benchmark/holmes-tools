@@ -30,7 +30,7 @@ def read_data(path, train_portions=[1]):
 flash_holmes_results = read_data("data/holmes_results_f1_raw_free.csv", train_portions=[0.03125])
 
 
-result_files = glob.glob("/Users/tresi/Downloads/roberta-different-layers/*")
+result_files = glob.glob("/Users/tresi/Downloads/results_flash-holmes (2).csv")
 for result_file in result_files:
     results = pandas.read_csv(result_file, index_col=0)
 

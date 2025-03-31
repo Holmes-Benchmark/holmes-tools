@@ -33,6 +33,7 @@ def process_frame(frame, train_portions=[1]):
         del frame["train portion"]
 
     return frame
+
 def read_data(path, train_portions=[1]):
     frame = pandas.read_csv(path)
     return process_frame(frame, train_portions)

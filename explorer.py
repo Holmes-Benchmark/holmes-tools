@@ -8,6 +8,8 @@ import streamlit as st
 from PIL import Image
 from scipy.stats import kendalltau
 from st_keyup import st_keyup
+import io
+import plotly.io as pio
 
 from utils import read_data, get_rankings, aggregate_results, get_polar_plot, process_frame
 def main():
@@ -83,18 +85,25 @@ def main():
             #"compression": read_data("data/holmes_results_compression.csv"),
         }
     elif uploaded_file is not None:
-        uploaded_frame = pandas.read_csv(uploaded_file)
-        processed_frame = process_frame(uploaded_frame)
-        st.session_state["raw_data"] = {
-            "f1": processed_frame
-        }
+        uploaded_frame = pandas.read_csv(uploaded_file, index_col=0)
 
-        st.download_button(
-            label="Download transformed Data",
-            data=convert_frame(processed_frame),
-            file_name="transformed_results.csv",
-            mime="text/csv",
-        )
+        pivot_results = uploaded_frame.pivot_table(index=['probing_dataset'], columns=["model_name"], values="score").reset_index()
+        pivot_results = pivot_results[pivot_results["probing_dataset"].isin(st.session_state["raw_data"]["f1"]["probing dataset"])]
+        pivot_results = pivot_results.fillna(0.0)
+
+        uploaded_models = list(pivot_results.columns[1:])
+        new_models = [model for model in uploaded_models if model not in st.session_state["raw_data"]["f1"].columns]
+
+        if len(new_models) > 0:
+            pivot_results = pivot_results[["probing_dataset"] + new_models]
+            st.session_state["raw_data"]["f1"] = st.session_state["raw_data"]["f1"].set_index("probing dataset").join(pivot_results.set_index("probing_dataset")).reset_index().fillna(0.0)
+
+            st.download_button(
+                label="Download transformed Data",
+                data=convert_frame(st.session_state["raw_data"]["f1"]),
+                file_name="transformed_results.csv",
+                mime="text/csv",
+            )
 
     if "raw_data" in st.session_state:
         st.session_state["probing_datasets"] = list(st.session_state["raw_data"]["f1"]["probing dataset"].unique())
@@ -143,6 +152,8 @@ def main():
 
         fig = get_polar_plot(data=relevant_competencies_data, target_column='linguistic competencies', title="Phenomena Type Comparison")
         st.plotly_chart(fig)
+
+
 
     with tab2:
         default_phenomena = [

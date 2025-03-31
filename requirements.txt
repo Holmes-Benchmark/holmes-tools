@@ -10,3 +10,4 @@ st-click-detector
 matplotlib
 seaborn
 click
+kaleido
